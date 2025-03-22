@@ -18,7 +18,7 @@ local get_shared_data = function(opts, prompt)
   return {
     system = opts.system_prompt,
     max_tokens = opts.max_tokens,
-    messages = { { role = 'user', content = prompt } },
+    messages = prompt,
     stream = opts.stream,
     model = opts.model,
   }
@@ -110,8 +110,8 @@ end
 
 return {
   {
-    -- dir = os.getenv 'HOME' .. '/code/personal/ghost-writer.nvim',
-    'lrav35/ghost-writer.nvim',
+    dir = os.getenv 'HOME' .. '/code/ghost-writer.nvim',
+    -- 'lrav35/ghost-writer.nvim',
     dependencies = {
       'nvim-lua/plenary.nvim',
     },
