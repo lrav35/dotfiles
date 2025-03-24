@@ -110,8 +110,8 @@ end
 
 return {
   {
-    dir = os.getenv 'HOME' .. '/code/ghost-writer.nvim',
-    -- 'lrav35/ghost-writer.nvim',
+    -- dir = os.getenv 'HOME' .. '/code/ghost-writer.nvim',
+    'lrav35/ghost-writer.nvim',
     dependencies = {
       'nvim-lua/plenary.nvim',
     },
