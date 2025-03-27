@@ -82,12 +82,15 @@ local function get_hyperbolic_specific_args(opts, prompt)
 end
 
 local function get_redacted_specific_args(opts, prompt)
-  local url = opts.url
+  local url = opts.url and get_env_var(opts.url)
   local api_key = opts.api_key_name and get_env_var(opts.api_key_name)
 
-  local data = get_shared_data(opts, prompt)
-  data['top_p'] = 0.1
-  data['temperature'] = 1
+  local data = {
+    -- max_tokens = opts.max_tokens,
+    -- top_p = 0.1,
+    -- temperature = 1,
+    messages = prompt,
+  }
 
   local json_data = vim.json.encode(data)
 
@@ -110,14 +113,14 @@ end
 
 return {
   {
-    -- dir = os.getenv 'HOME' .. '/code/ghost-writer.nvim',
-    'lrav35/ghost-writer.nvim',
+    dir = os.getenv 'HOME' .. '/code/personal/ghost-writer.nvim',
+    -- 'lrav35/ghost-writer.nvim',
     dependencies = {
       'nvim-lua/plenary.nvim',
     },
     opts = {
       debug = true,
-      default = 'anthropic',
+      default = 'redacted',
       system_prompt = 'you are a helpful assistant, what I am sending you may be notes, code or context provided by our previous conversation',
       providers = {
         anthropic = {
