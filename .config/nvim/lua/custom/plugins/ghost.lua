@@ -33,6 +33,14 @@ local openai_style_content_parser = function(stream)
   return nil
 end
 
+local azure_content_parser = function(stream)
+  local success, json_data = pcall(vim.json.decode, stream)
+  if success and json_data.choices and json_data.choices[1] and json_data.choices[1].message and json_data.choices[1].message.content then
+    return json_data.choices[1].message.content
+  end
+  return nil
+end
+
 local function get_anthropic_specific_args(opts, prompt)
   local url = opts.url
   local api_key = opts.api_key_name and get_env_var(opts.api_key_name)
@@ -95,9 +103,7 @@ local function get_redacted_specific_args(opts, prompt)
   local json_data = vim.json.encode(data)
 
   local args = {
-    '-v',
-    '--no-buffer',
-    '-N',
+    '-sS',
     url,
     '-H',
     'Content-Type: application/json',
@@ -150,7 +156,7 @@ return {
           api_key_name = 'REDACTED_API_KEY',
           max_tokens = 4096,
           curl_args_fn = get_redacted_specific_args,
-          parser = openai_style_content_parser,
+          parser = azure_content_parser,
           stream = false,
         },
       },
