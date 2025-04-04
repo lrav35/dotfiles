@@ -45,12 +45,11 @@
         "on-click": "pavucontrol"
     },
     "network": {
-        "format-wifi": "   {essid} ({signalStrength}%)",
-        "format-ethernet": "{ipaddr}/{cidr} ",
-        "tooltip-format": "{ifname} via {gwaddr} ",
+        "format-wifi": "  {essid} ({signalStrength}%)",
+        "format-ethernet": "<span> {bandwidthDownBytes}</span> <span> {bandwidthUpBytes}</span>",
+        "tooltip-format": "Network: <b>{ipaddr}/{cidr}</b>\nInterface: <b>{ifname}</b>",
         "format-linked": "{ifname} (No IP) ",
-        "format-disconnected": "Disconnected ⚠",
-        "on-click": "sh ~/scripts/rofi-wifi-menu/rofi-wifi-menu.sh"
+        "format-disconnected": "Disconnected ⚠"
     },
     "cpu": {
         "format": "  {usage}%",
