@@ -33,14 +33,6 @@ local openai_style_content_parser = function(stream)
   return nil
 end
 
-local azure_content_parser = function(stream)
-  local success, json_data = pcall(vim.json.decode, stream)
-  if success and json_data.choices and json_data.choices[1] and json_data.choices[1].message and json_data.choices[1].message.content then
-    return json_data.choices[1].message.content
-  end
-  return nil
-end
-
 local function get_anthropic_specific_args(opts, prompt)
   local url = opts.url
   local api_key = opts.api_key_name and get_env_var(opts.api_key_name)
@@ -89,44 +81,15 @@ local function get_hyperbolic_specific_args(opts, prompt)
   return args
 end
 
-local function get_redacted_specific_args(opts, prompt)
-  local url = opts.url and get_env_var(opts.url)
-  local api_key = opts.api_key_name and get_env_var(opts.api_key_name)
-
-  local data = {
-    -- max_tokens = opts.max_tokens,
-    -- top_p = 0.1,
-    -- temperature = 1,
-    messages = prompt,
-  }
-
-  local json_data = vim.json.encode(data)
-
-  local args = {
-    '-sS',
-    url,
-    '-H',
-    'Content-Type: application/json',
-    '-H',
-    string.format('Authorization: Bearer %s', api_key),
-    '-H',
-    'use-case: local development assistance',
-    '-d',
-    json_data,
-  }
-  return args
-end
-
 return {
   {
-    dir = os.getenv 'HOME' .. '/code/personal/ghost-writer.nvim',
-    -- 'lrav35/ghost-writer.nvim',
+    'lrav35/ghost.nvim',
     dependencies = {
       'nvim-lua/plenary.nvim',
     },
     opts = {
-      debug = true,
-      default = 'redacted',
+      debug = false,
+      default = 'anthropic',
       system_prompt = 'you are a helpful assistant, what I am sending you may be notes, code or context provided by our previous conversation',
       providers = {
         anthropic = {
@@ -149,15 +112,6 @@ return {
           curl_args_fn = get_hyperbolic_specific_args,
           parser = openai_style_content_parser,
           stream = true,
-        },
-        redacted = {
-          url = 'REDACTED_API_URL',
-          event_based = false,
-          api_key_name = 'REDACTED_API_KEY',
-          max_tokens = 4096,
-          curl_args_fn = get_redacted_specific_args,
-          parser = azure_content_parser,
-          stream = false,
         },
       },
       ui = {
