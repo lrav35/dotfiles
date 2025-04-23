@@ -73,10 +73,9 @@ local function get_anthropic_specific_args(opts, prompt)
 end
 
 local function get_goog_specific_args(opts, prompt)
-  local url = opts.url .. ':streamGenerateContent?alt=sse&key=' .. get_env_var(opts.api_key_name)
+  local url = opts.url .. opts.model .. ':streamGenerateContent?alt=sse&key=' .. get_env_var(opts.api_key_name)
 
   local data = {
-    --TODO: modify the prompt builder in ghost
     contents = prompt,
     generationConfig = {
       maxOutputTokens = 4096,

@@ -2,12 +2,13 @@
 # equals doesn't matter.
 background = 000000 
 foreground = ffffff
+# theme = GruvboxLight
+
+unfocused-split-opacity = 1
+mouse-scroll-multiplier = 2
 
 # Comments start with a `#` and are only valid on their own line.
 # Blank lines are ignored!
-
-
-# keybind = ctrl+t=new_split:right
 
 # Empty values reset the configuration to the default value
 font-family = JetBrainsMono Nerd Font Mono
@@ -32,8 +33,8 @@ keybind = ctrl+shift+l=goto_split:right
 
 ## tabs ##
 keybind = ctrl+t=new_tab
-keybind = ctrl+l=next_tab
-keybind = ctrl+h=previous_tab
+keybind = ctrl+[=next_tab
+keybind = ctrl+]=previous_tab
 
 
 keybind = ctrl+shift+1=goto_tab:1
