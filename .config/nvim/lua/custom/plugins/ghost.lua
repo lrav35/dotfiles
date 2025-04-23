@@ -6,14 +6,6 @@ local function get_env_var(name)
   end
 end
 
-local anthropic_content_parser = function(stream)
-  local success, json = pcall(vim.json.decode, stream)
-  if success and json.delta and json.delta.text then
-    return json.delta.text
-  end
-  return nil
-end
-
 local get_shared_data = function(opts, prompt)
   return {
     system = opts.system_prompt,
@@ -22,6 +14,30 @@ local get_shared_data = function(opts, prompt)
     stream = opts.stream,
     model = opts.model,
   }
+end
+
+local anthropic_content_parser = function(stream)
+  local success, json = pcall(vim.json.decode, stream)
+  if success and json.delta and json.delta.text then
+    return json.delta.text
+  end
+  return nil
+end
+
+local goog_content_parser = function(stream)
+  local success, json = pcall(vim.json.decode, stream)
+  if
+    success
+    and json.candidates
+    and json.candidates[1]
+    and json.candidates[1].content
+    and json.candidates[1].content.parts
+    and json.candidates[1].content.parts[1]
+    and json.candidates[1].content.parts[1].text
+  then
+    return json.candidates[1].content.parts[1].text
+  end
+  return nil
 end
 
 -- For providers using OpenAI/Hyperbolic style responses
@@ -56,6 +72,30 @@ local function get_anthropic_specific_args(opts, prompt)
   return args
 end
 
+local function get_goog_specific_args(opts, prompt)
+  local url = opts.url .. ':streamGenerateContent?alt=sse&key=' .. get_env_var(opts.api_key_name)
+
+  local data = {
+    --TODO: modify the prompt builder in ghost
+    contents = prompt,
+    generationConfig = {
+      maxOutputTokens = 4096,
+    },
+  }
+  local json_data = vim.json.encode(data)
+
+  local args = {
+    '--no-buffer',
+    '-N',
+    url,
+    '-H',
+    'Content-Type: application/json',
+    '-d',
+    json_data,
+  }
+  return args
+end
+
 local function get_hyperbolic_specific_args(opts, prompt)
   local url = opts.url
   local api_key = opts.api_key_name and get_env_var(opts.api_key_name)
@@ -83,13 +123,14 @@ end
 
 return {
   {
-    'lrav35/ghost.nvim',
+    -- 'lrav35/ghost.nvim',
+    dir = '~/code/ghost.nvim',
     dependencies = {
       'nvim-lua/plenary.nvim',
     },
     opts = {
-      debug = false,
-      default = 'anthropic',
+      debug = true,
+      default = 'goog',
       system_prompt = 'you are a helpful assistant, what I am sending you may be notes, code or context provided by our previous conversation',
       providers = {
         anthropic = {
@@ -101,6 +142,16 @@ return {
           max_tokens = 4096,
           curl_args_fn = get_anthropic_specific_args,
           parser = anthropic_content_parser,
+          stream = true,
+        },
+        goog = {
+          url = 'https://generativelanguage.googleapis.com/v1beta/models/',
+          model = 'gemini-2.5-pro-preview-03-25',
+          event_based = false,
+          api_key_name = 'GOOG_API_KEY',
+          max_tokens = 4096,
+          curl_args_fn = get_goog_specific_args,
+          parser = goog_content_parser,
           stream = true,
         },
         hyperbolic = {
