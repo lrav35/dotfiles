@@ -148,7 +148,7 @@ return {
           model = 'gemini-2.5-pro-preview-03-25',
           event_based = false,
           api_key_name = 'GOOG_API_KEY',
-          max_tokens = 4096,
+          max_tokens = 10000,
           curl_args_fn = get_goog_specific_args,
           parser = goog_content_parser,
           stream = true,
@@ -172,15 +172,27 @@ return {
         -- Global keymaps
         open = {
           key = '<leader>wo',
-          desc = '[W]indow [O]pen Chat',
+          desc = '[W]indow [O]pen chat',
         },
         exit = {
           key = '<leader>we',
-          desc = '[W]indow [E]xit',
+          desc = '[W]indow [E]xit chat',
         },
         prompt = {
           key = '<leader>p',
           desc = '[P]rompt',
+        },
+        save = {
+          key = '<leader>ww',
+          desc = '[W]indow [W]rite chat',
+        },
+        load = {
+          key = '<leader>wl',
+          desc = '[W]indow [L]oad chat',
+        },
+        cp_buffer = {
+          key = '<leader>cb',
+          desc = '[C]opy open window [B]uffer',
         },
         -- Buffer-specific keymaps
         buffer = {
