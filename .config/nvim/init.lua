@@ -615,6 +615,7 @@ require('lazy').setup({
         html = {},
         zls = {},
         jsonls = {},
+        ocamllsp = {},
 
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
