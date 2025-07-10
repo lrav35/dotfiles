@@ -122,19 +122,19 @@ end
 
 return {
   {
-    -- 'lrav35/ghost.nvim',
-    dir = '~/code/ghost.nvim',
+    'lrav35/ghost.nvim',
+    -- dir = '~/code/ghost.nvim',
     dependencies = {
       'nvim-lua/plenary.nvim',
     },
     opts = {
       debug = true,
-      default = 'goog',
+      default = 'anthropic',
       system_prompt = 'you are a helpful assistant, what I am sending you may be notes, code or context provided by our previous conversation',
       providers = {
         anthropic = {
           url = 'https://api.anthropic.com/v1/messages',
-          model = 'claude-3-5-sonnet-20241022',
+          model = 'claude-sonnet-4-20250514',
           event_based = true,
           target_state = 'content_block_delta',
           api_key_name = 'ANTHROPIC_API_KEY',
